@@ -1,68 +1,153 @@
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Modal} from 'react-native';
+import {RNCamera} from 'react-native-camera';
 
 export default function Capture(props) {
   const [visible, setVisible] = useState(false);
-  return (
-    <View style={styles.container}>
-      <View style={styles.topContainer}>
-        <Text style={{fontSize: 22, fontFamily: 'aerial'}}>
-          Media App By Shubham Nishad
-        </Text>
-      </View>
-      <View style={styles.botContainer}>
-        <TouchableOpacity
-          style={styles.captureButton}
-          onPress={() => setVisible(true)}>
-          <Text style={{fontFamily: 'aerial', fontSize: 18}}>
-            Capture / View Media
-          </Text>
-        </TouchableOpacity>
-      </View>
+  const [toggleCam, setToggleCam] = useState(false);
+  const [imageMode, setImageMode] = useState(true);
+  const [videoMode, setVideoMode] = useState(false);
+  const ref = React.createRef();
 
-      {visible ? (
-        <Modal animationType="slide" transparent={true}>
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <TouchableOpacity style={[styles.button, styles.uploadButton]}>
-                <Text
-                  style={{
-                    fontFamily: 'aerial',
-                    fontSize: 15,
-                  }}>
-                  Capture Media
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.button, styles.uploadButton]}
-                onPress={() => {
-                  props.navigation.navigate('Gallery');
-                  setVisible(!visible);
+  const takePicture = async () => {
+    if (ref.current) {
+      const options = {quality: 1.5};
+      const data = await ref.current.takePictureAsync(options);
+
+      console.log('Data of image', data.uri);
+      setToggleCam(false);
+    }
+  };
+
+  return (
+    <>
+      {toggleCam ? (
+        <View style={{flex: 1}}>
+          <RNCamera
+            style={{
+              flex: 1,
+              justifyContent: 'flex-end',
+            }}
+            ref={ref}
+            type={RNCamera.Constants.Type.back}
+            captureAudio={false}
+            androidCameraPermissionOptions={{
+              title: 'Permission to use camera',
+              message: 'We need your permission to use your camera',
+              buttonPositive: 'Ok',
+              buttonNegative: 'Cancel',
+            }}>
+            <View
+              style={{
+                height: 100,
+                backgroundColor: 'transparent',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-around',
+
+                  width: '100%',
+                  height: 35,
+                  alignItems: 'center',
                 }}>
-                <Text
-                  style={{
-                    fontFamily: 'aerial',
-                    fontSize: 15,
-                  }}>
-                  Open Gallery
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.button, styles.uploadButton]}
-                onPress={() => setVisible(!visible)}>
-                <Text
-                  style={{
-                    fontFamily: 'aerial',
-                    fontSize: 15,
-                  }}>
-                  Cancel
-                </Text>
-              </TouchableOpacity>
+                <TouchableOpacity style={{backgroundColor: 'skyblue'}}>
+                  <Text style={{fontFamily: 'aerial', fontSize: 18}}>
+                    Photo
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{backgroundColor: 'skyblue'}}
+                  onPress={() => setImageMode(false)}>
+                  <Text style={{fontFamily: 'aerial', fontSize: 18}}>
+                    Video
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{flexDirection: 'row'}}>
+                {imageMode ? (
+                  <TouchableOpacity onPress={takePicture}>
+                    <Text style={styles.capture}>[Photo]</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity onPress={takePicture}>
+                    <Text style={styles.capture}>[Video]</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
+          </RNCamera>
+        </View>
+      ) : (
+        <View style={styles.container}>
+          <View style={styles.topContainer}>
+            <Text style={{fontSize: 22, fontFamily: 'aerial'}}>
+              Media App By Shubham Nishad
+            </Text>
           </View>
-        </Modal>
-      ) : null}
-    </View>
+          <View style={styles.botContainer}>
+            <TouchableOpacity
+              style={styles.captureButton}
+              onPress={() => setVisible(true)}>
+              <Text style={{fontFamily: 'aerial', fontSize: 18}}>
+                Capture / View Media
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {visible ? (
+            <Modal animationType="slide" transparent={true}>
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <TouchableOpacity
+                    style={[styles.button, styles.uploadButton]}
+                    onPress={() => {
+                      setToggleCam(true);
+                      setVisible(false);
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: 'aerial',
+                        fontSize: 15,
+                      }}>
+                      Capture Media
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.button, styles.uploadButton]}
+                    onPress={() => {
+                      props.navigation.navigate('Gallery');
+                      setVisible(!visible);
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: 'aerial',
+                        fontSize: 15,
+                      }}>
+                      Open Gallery
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.button, styles.uploadButton]}
+                    onPress={() => setVisible(!visible)}>
+                    <Text
+                      style={{
+                        fontFamily: 'aerial',
+                        fontSize: 15,
+                      }}>
+                      Cancel
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+          ) : null}
+        </View>
+      )}
+    </>
   );
 }
 
@@ -131,5 +216,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 5,
     marginBottom: 10,
+  },
+  capture: {
+    flex: 0,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    color: '#000',
+    padding: 10,
+    margin: 40,
   },
 });
