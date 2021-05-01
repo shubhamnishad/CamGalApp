@@ -13,7 +13,6 @@ export default function Capture(props) {
     if (ref.current) {
       const options = {quality: 1.5};
       const data = await ref.current.takePictureAsync(options);
-
       console.log('Data of image', data.uri);
       setToggleCam(false);
     }
@@ -30,7 +29,7 @@ export default function Capture(props) {
             }}
             ref={ref}
             type={RNCamera.Constants.Type.back}
-            captureAudio={false}>
+            captureAudio={true}>
             <View style={styles.photoVideoMainView}>
               <View style={styles.photoVideoSwitchView}>
                 <TouchableOpacity
