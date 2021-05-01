@@ -13,6 +13,7 @@ export default function Capture(props) {
     if (ref.current) {
       const options = {quality: 1.5};
       const data = await ref.current.takePictureAsync(options);
+
       console.log('Data of image', data.uri);
       setToggleCam(false);
     }
@@ -29,26 +30,40 @@ export default function Capture(props) {
             }}
             ref={ref}
             type={RNCamera.Constants.Type.back}
-            captureAudio={true}>
-            <View style={styles.photoVideoMainView}>
-              <View style={styles.photoVideoSwitchView}>
-                <TouchableOpacity
-                  style={styles.photoVideoSwitch}
-                  onPress={() => setImageMode(true)}>
-                  <Text style={{fontFamily: 'aerial', fontSize: 18}}>
-                    Photo
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.photoVideoSwitch}
-                  onPress={() => setImageMode(false)}>
-                  <Text style={{fontFamily: 'aerial', fontSize: 18}}>
-                    Video
-                  </Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={{flexDirection: 'row', position: 'absolute'}}>
+            captureAudio={false}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                width: '100%',
+                alignItems: 'center',
+              }}>
+              <TouchableOpacity
+                style={styles.photoVideoSwitch}
+                onPress={() => {
+                  setImageMode(true);
+                  console.log('pressP');
+                }}>
+                <Text style={{fontFamily: 'aerial', fontSize: 18}}>Photo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.photoVideoSwitch}
+                onPress={() => {
+                  setImageMode(false);
+                  console.log('pressedV');
+                }}>
+                <Text style={{fontFamily: 'aerial', fontSize: 18}}>Video</Text>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                height: 100,
+                backgroundColor: 'transparent',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{flexDirection: 'row', backgroundColor: 'transparent'}}>
                 {imageMode ? (
                   <TouchableOpacity onPress={takePicture}>
                     <Text style={styles.capture}>[Photo]</Text>
@@ -207,25 +222,9 @@ const styles = StyleSheet.create({
     margin: 40,
   },
   photoVideoSwitch: {
-    backgroundColor: 'white',
-    zIndex: 1,
     width: 70,
     alignItems: 'center',
-    borderRadius: 10,
-  },
-  photoVideoSwitchView: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    height: 35,
-    alignItems: 'center',
-    bottom: 60,
-  },
-  photoVideoMainView: {
-    height: 100,
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
+    borderRadius: 20,
+    backgroundColor: 'white',
   },
 });
