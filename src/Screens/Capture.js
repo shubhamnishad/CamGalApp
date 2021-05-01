@@ -6,7 +6,7 @@ export default function Capture(props) {
   const [visible, setVisible] = useState(false);
   const [toggleCam, setToggleCam] = useState(false);
   const [imageMode, setImageMode] = useState(true);
-  const [videoMode, setVideoMode] = useState(false);
+
   const ref = React.createRef();
 
   const takePicture = async () => {
@@ -43,23 +43,26 @@ export default function Capture(props) {
                 backgroundColor: 'transparent',
                 justifyContent: 'center',
                 alignItems: 'center',
+                position: 'relative',
               }}>
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-around',
-
                   width: '100%',
                   height: 35,
                   alignItems: 'center',
+                  bottom: 60,
                 }}>
-                <TouchableOpacity style={{backgroundColor: 'skyblue'}}>
+                <TouchableOpacity
+                  style={styles.photoVideoSwitch}
+                  onPress={() => setImageMode(true)}>
                   <Text style={{fontFamily: 'aerial', fontSize: 18}}>
                     Photo
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={{backgroundColor: 'skyblue'}}
+                  style={styles.photoVideoSwitch}
                   onPress={() => setImageMode(false)}>
                   <Text style={{fontFamily: 'aerial', fontSize: 18}}>
                     Video
@@ -67,7 +70,7 @@ export default function Capture(props) {
                 </TouchableOpacity>
               </View>
 
-              <View style={{flexDirection: 'row'}}>
+              <View style={{flexDirection: 'row', position: 'absolute'}}>
                 {imageMode ? (
                   <TouchableOpacity onPress={takePicture}>
                     <Text style={styles.capture}>[Photo]</Text>
@@ -224,5 +227,12 @@ const styles = StyleSheet.create({
     color: '#000',
     padding: 10,
     margin: 40,
+  },
+  photoVideoSwitch: {
+    backgroundColor: 'white',
+    zIndex: 1,
+    width: 70,
+    alignItems: 'center',
+    borderRadius: 10,
   },
 });
