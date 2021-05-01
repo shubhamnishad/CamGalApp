@@ -31,23 +31,8 @@ export default function Capture(props) {
             ref={ref}
             type={RNCamera.Constants.Type.back}
             captureAudio={false}>
-            <View
-              style={{
-                height: 100,
-                backgroundColor: 'transparent',
-                justifyContent: 'center',
-                alignItems: 'center',
-                position: 'relative',
-              }}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-around',
-                  width: '100%',
-                  height: 35,
-                  alignItems: 'center',
-                  bottom: 60,
-                }}>
+            <View style={styles.photoVideoMainView}>
+              <View style={styles.photoVideoSwitchView}>
                 <TouchableOpacity
                   style={styles.photoVideoSwitch}
                   onPress={() => setImageMode(true)}>
@@ -228,5 +213,20 @@ const styles = StyleSheet.create({
     width: 70,
     alignItems: 'center',
     borderRadius: 10,
+  },
+  photoVideoSwitchView: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    height: 35,
+    alignItems: 'center',
+    bottom: 60,
+  },
+  photoVideoMainView: {
+    height: 100,
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
   },
 });
