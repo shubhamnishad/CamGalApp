@@ -1,11 +1,19 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Modal} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Modal,
+  Image,
+} from 'react-native';
 import {RNCamera} from 'react-native-camera';
 
 export default function Capture(props) {
   const [visible, setVisible] = useState(false);
   const [toggleCam, setToggleCam] = useState(false);
   const [imageMode, setImageMode] = useState(true);
+  const [imageUri, setImageUri] = useState([]);
 
   const ref = React.createRef();
 
@@ -13,11 +21,12 @@ export default function Capture(props) {
     if (ref.current) {
       const options = {quality: 1.5};
       const data = await ref.current.takePictureAsync(options);
-
       console.log('Data of image', data.uri);
+      setImageUri([...imageUri, {key: data.uri}]);
       setToggleCam(false);
     }
   };
+  console.log('@@@@@@@@@22', imageUri);
 
   return (
     <>
@@ -92,6 +101,11 @@ export default function Capture(props) {
                 Capture / View Media
               </Text>
             </TouchableOpacity>
+
+            {/* <Image
+              source={{uri: imageUri[0].key}}
+              style={{width: 180, height: 150}}
+            /> */}
           </View>
 
           {visible ? (
